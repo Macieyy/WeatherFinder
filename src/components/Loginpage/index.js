@@ -1,6 +1,6 @@
 import React from 'react';
 import Login from './Login';
-
+import Register from "./Register"
 
 
 
@@ -16,5 +16,6 @@ export default class LoginPage extends React.Component {
         return (
             <Login toggleLogin={toggleLogin}/>
         );
+        
     }
 }

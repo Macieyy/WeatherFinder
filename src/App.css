@@ -41,8 +41,22 @@ input{
   width: 25px;
 }
 .profile-weather-icon img{
-  width: 100px;
+  width: 75px;
+  height: 100px;
 }
+img#icon{
+  cursor: pointer;
+  -webkit-filter: brightness(100%);
+}
+img#icon:hover {
+  -webkit-filter: brightness(70%);
+  -webkit-transition: all 1s ease;
+  -moz-transition: all 1s ease;
+  -o-transition: all 1s ease;
+  -ms-transition: all 1s ease;
+  transition: all 1s ease;
+}
+
 h1{
   font-size: 50px;
 }

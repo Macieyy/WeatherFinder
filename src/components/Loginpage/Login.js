@@ -1,8 +1,8 @@
 import React from 'react';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
-
-
+import {Link} from "react-router-dom";
+import ContextStore from "../../ContexStore"
 const userName = "admin";
 const userPassword = "admin";
 
@@ -25,24 +25,25 @@ const api = user =>
         }, 1000);
 
     });
-
+   
 
 export default class Login extends React.Component {
+    static contextType = ContextStore;
     constructor(props) {
         super(props);
         this.state = {
-
+            loggedIn: false
         }
     }
     render() {
-        const { toggleLogin } = this.props;
         return (
+            
             <Formik
                 initialValues={{ userName: "", password: "", general: "" }}
                 onSubmit={async (values, { setErrors, setSubmitting }) => {
                     try {
                         await api(values);
-                        toggleLogin();
+                        this.context.setRedirect();
                     }
                     catch (error) {
                         setErrors(error);
@@ -66,7 +67,9 @@ export default class Login extends React.Component {
                         } = props;
 
                         return (
+                            
                             <div style={{ height: "90vh" }} className="d-flex justify-content-center overflow-hidden">
+                                {this.context.succesfullLogin()}
                                 <div style={{ backgroundColor: "rgb(248,248,248)" }} className="col-xl-3 col-lg-4 col-md-5 col-11 rounded shadow align-self-center">
                                     <h3 className=" pt-3 mx-3 text-center">Sign in</h3>
                                     {errors.general && (<div className="input-feedback text-danger mt-3 text-center ">{errors.general}</div>)}
@@ -90,7 +93,7 @@ export default class Login extends React.Component {
                                             <div className="input-feedback text-danger">{errors.password}</div>
                                         )}
                                         <button type="submit" disabled={isSubmitting} className="btn btn-primary m-3">Submit</button>
-                                        <span className="mx-3 pb-3">Don't have an account? <a href="/#"><br className="d-xl-none" />Register now!</a></span>
+                                        <span className="mx-3 pb-3">Don't have an account? <Link to="/register"><br className="d-xl-none" />Register now!</Link></span>
                                     </form>
                                 </div>
                             </div>

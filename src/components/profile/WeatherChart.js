@@ -14,7 +14,7 @@ export default class WeatherChart extends React.Component {
         labels: this.props.profile.data.map((day) => day.datetime),
         datasets: [
           {
-            label: "Temperature [°C]",
+            label: " Avg Temperature [°C]",
             backgroundColor: "rgba(238,193, 17, 0.75)",
             data: this.props.profile.data.map((day) => ((day.app_max_temp + day.app_min_temp)/2).toFixed())
           },
