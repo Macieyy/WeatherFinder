@@ -35,6 +35,9 @@ export default class Login extends React.Component {
             loggedIn: false
         }
     }
+    redirectToRegister(){
+        this.props.history.push("/register")
+    }
     render() {
         return (
             

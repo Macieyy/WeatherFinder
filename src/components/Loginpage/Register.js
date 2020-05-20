@@ -1,12 +1,9 @@
 import React from 'react';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
-import {Link} from "react-router-dom";
-import { useHistory } from 'react-router-dom';
+import {Link, Redirect} from "react-router-dom";
 import ContextStore from "../../ContexStore"
 const userName = "admin";
-const userPassword = "admin";
-
 
 const signUpSchema = Yup.object().shape({
     userName: Yup.string()
@@ -18,7 +15,7 @@ const signUpSchema = Yup.object().shape({
 const api = user =>
     new Promise((resolve, reject) => {
         setTimeout(() => {
-            if (user.userName === userName && user.password === userPassword) {
+            if (user.userName !== userName) {
                 resolve();
             } else {
                 reject(new Error());
@@ -36,9 +33,7 @@ export default class Login extends React.Component {
             loggedIn: false
         }
     }
-    
     render() {
-        console.log(this.context);
         return (
             
             <Formik
@@ -46,11 +41,12 @@ export default class Login extends React.Component {
                 onSubmit={async (values, { setErrors, setSubmitting }) => {
                     try {
                         await api(values);
-                        //this.context.setRedirect();
+                        alert("Success");
+                        this.props.history.push('/');
                     }
                     catch (error) {
                         setErrors(error);
-                        error.general = "Your username or password is incorrect. Please try again.";
+                        error.general = "Username already taken, please choose new one";
                         setSubmitting(false);
                     }
                 }}
