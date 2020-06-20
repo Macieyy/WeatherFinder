@@ -1,6 +1,6 @@
 import React from 'react';
 import { useContext } from 'react';
-import ContextStore from "../../ContexStore";
+import ContextStore from "../../../ContexStore";
 
 const Modal = () => {
   const context = useContext(ContextStore);

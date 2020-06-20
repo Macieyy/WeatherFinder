@@ -1,6 +1,6 @@
 import React from "react";
 import { WiCloudDown } from "react-icons/wi";
-import ContextStore from "../../ContexStore"
+import ContextStore from "../../../ContexStore"
 export default class MainWeather extends React.Component {
     static contextType = ContextStore;
     state = {

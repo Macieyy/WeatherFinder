@@ -1,11 +1,11 @@
 import React from "react";
-import Expand from "../../resources/expand.svg"
-import Exit from "../../resources/Cross.svg"
-import Location from "../../resources/loc.svg"
-import Humidity from "../../resources/humidity.svg"
-import Temp from "../../resources/temp.svg"
-import WeatherChart from "../profile/WeatherChart"
-import ContextStore from "../../ContexStore";
+import Expand from "../../../resources/expand.svg"
+import Exit from "../../../resources/Cross.svg"
+import Location from "../../../resources/loc.svg"
+import Humidity from "../../../resources/humidity.svg"
+import Temp from "../../../resources/temp.svg"
+import WeatherChart from "./WeatherChart"
+import ContextStore from "../../../ContexStore"
 export default class ProfileWeather extends React.Component {
     static contextType = ContextStore;
     constructor(props) {

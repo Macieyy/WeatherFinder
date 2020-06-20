@@ -1,7 +1,8 @@
 import React from "react";
 import MainWeather from "./MainWeather";
 import ForecastWeather from "./ForecastWeather";
-import ContextStore from "../../ContexStore"
+import ContextStore from "../../../ContexStore"
+
 export default class MainSection extends React.Component {
     static contextType = ContextStore;
     render() {

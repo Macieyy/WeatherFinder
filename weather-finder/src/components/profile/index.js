@@ -1,6 +1,6 @@
 import React from "react";
 import ProfileWeather from "./ProfileWeather";
-import ContextStore from "../../ContexStore"
+import ContextStore from "../../../ContexStore"
 export default class ProfileSection extends React.Component {
     static contextType = ContextStore;
     render() {

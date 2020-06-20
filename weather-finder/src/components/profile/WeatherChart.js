@@ -1,7 +1,7 @@
 import React from 'react';
 import { Line } from "react-chartjs-2";
 import Slider from 'react-input-slider';
-import ContextStore from "../../ContexStore";
+import ContextStore from "../../../ContexStore";
 
 export default class WeatherChart extends React.Component {
   static contextType = ContextStore;

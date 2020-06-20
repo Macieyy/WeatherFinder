@@ -1,13 +1,17 @@
 import React from 'react';
 import 'bootstrap/dist/css/bootstrap.css';
 import './App.css';
-import Home from "./pages/Home";
-import Modal from "./components/main/Modal";
-import Login from "./components/Loginpage/Login";
-import Register from "./components/Loginpage/Register"
+import Home from "./components/Home/Home";
+import { SecureRoute, ImplicitCallback } from '@okta/okta-react';
+import Modal from "./components/Home/main/Modal";
+import Navigation from './components/shared/Navigation';
+import RegistrationForm from './components/auth/RegistrationForm';
+import config from './app.config';
+import LoginPage from './components/auth/LoginPage';
+import ProfilePage from './components/auth/ProfilPage';
 import axios from "axios";
 import ContextStore from "./ContexStore";
-import { Route, Switch, Redirect, BrowserRouter} from "react-router-dom";
+import { Route, Switch, Redirect} from "react-router-dom";
 
 const WEATHER_KEY = "ed4c130b02024734906162a48dc7aaee";
 
@@ -121,16 +125,15 @@ export default class App extends React.Component {
             logOut: this.logOut
           }}>
             {this.state.show ? <Modal /> : null}
-            <BrowserRouter
-            basename="/login">
-            <Switch>
-            <Route exact path="/" component={Login} />
-            <Route exact path="/register" component={Register} />
-            { this.state.loggedIn && 
-            <Route exact path="/home" component={Home} />
-            }
-            </Switch>
-            </BrowserRouter>
+            <main>
+            <Route
+            path="/login"
+            render={() => <LoginPage baseUrl={config.url} />}
+            />
+            <Route path="/implicit/callback" component={ImplicitCallback} />
+            <Route path="/register" component={RegistrationForm} />
+            <SecureRoute path="/" exact component={Home} />
+            </main>
           </ContextStore.Provider>
         </div>
         
