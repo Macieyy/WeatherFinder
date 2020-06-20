@@ -1,57 +1,30 @@
 import React from "react";
 import OktaAuth from "@okta/okta-auth-js";
 import { withAuth } from "@okta/okta-react";
-import { Link } from "react-router-dom";
-import { Formik } from "formik";
-import * as Yup from "yup";
+import {Link} from "react-router-dom"
+
 import config from "../../app.config";
 
-const signUpSchema = Yup.object().shape({
-  firstName: Yup.string().required("Required"),
-  lastName: Yup.string().required("Required"),
-  email: Yup.string()
-    .required("Required")
-    .email("Looks like it's not an email name"),
-  password: Yup.string()
-    .required("Required")
-    .min(
-      10,
-      "Must be at least 10 characters, at least one upper case letter and one number"
-    )
-    .matches(
-      /(?=.*\d)(?=.*[a-z])(?=.*[A-Z])/,
-      "Must be at least 10 characters, at least one upper case letter and one number"
-    ),
-});
-const initialState = {
-  firstName: "",
-  lastName: "",
-  email: "",
-  password: "",
-  generalError: "",
-  emailError: "",
-  firstNameError: "",
-  lastNameError: "",
-  passwordError: "",
-}
 export default withAuth(
   class RegistrationForm extends React.Component {
     constructor(props) {
       super(props);
       this.state = {
-        initialState,
+        firstName: "",
+        lastName: "",
+        email: "",
+        password: "",
         sessionToken: null,
       };
       this.oktaAuth = new OktaAuth({ url: config.url });
       this.checkAuthentication = this.checkAuthentication.bind(this);
       this.checkAuthentication();
 
-    this.handleSubmit = this.handleSubmit.bind(this);
-    this.handleFirstNameChange = this.handleFirstNameChange.bind(this);
-    this.handleLastNameChange = this.handleLastNameChange.bind(this);
-     this.handleEmailChange = this.handleEmailChange.bind(this);
-	  this.handlePasswordChange = this.handlePasswordChange.bind(this);
-	   this.validate = this.validate.bind(this)
+      this.handleSubmit = this.handleSubmit.bind(this);
+      this.handleFirstNameChange = this.handleFirstNameChange.bind(this);
+      this.handleLastNameChange = this.handleLastNameChange.bind(this);
+      this.handleEmailChange = this.handleEmailChange.bind(this);
+      this.handlePasswordChange = this.handlePasswordChange.bind(this);
     }
 
     async checkAuthentication() {
@@ -65,76 +38,55 @@ export default withAuth(
       this.checkAuthentication();
     }
 
-    handleFirstNameChange = (e) => {
+    handleFirstNameChange(e) {
       this.setState({ firstName: e.target.value });
     }
-    handleLastNameChange = (e) => {
+    handleLastNameChange(e) {
       this.setState({ lastName: e.target.value });
     }
-    handleEmailChange = (e) => {
+    handleEmailChange(e) {
       this.setState({ email: e.target.value });
     }
-    handlePasswordChange = (e) => {
+    handlePasswordChange(e) {
       this.setState({ password: e.target.value });
     }
 
-	validate = () =>{
-		let emailError = "";
-		// let firstNameError ="";
-		// let lastNameError = "";
-		// let passwordError ="";
-		if(!this.state.email.includes("@")){
-			emailError = "Looks like it's not an email name"
-		}
-		if(emailError){
-			this.SetState({emailError});
-			return false;
-		}
-
-		return true;
-	}
-	
-
-  handleSubmit = event => {
-    event.preventDefault();
-    const isValid = this.validate();
-    if (isValid) {
-      console.log(this.state)
-		// fetch("/api/users", {
-		// 	method: "POST",
-		// 	headers: {
-		// 	  Accept: "application/json",
-		// 	  "Content-Type": "application/json",
-		// 	},
-		// 	body: JSON.stringify(this.state),
-		//   })
-		// 	.then(() => {
-		// 	  this.oktaAuth
-		// 		.signIn({
-		// 		  username: this.state.email,
-		// 		  password: this.state.password,
-		// 		})
-		// 		.then(
-		// 		  (res) =>
-		// 			this.setState({
-		// 			  sessionToken: res.sessionToken,
-		// 			}),
-		// 		  (error) => {
-		// 			if (error) {
-		// 			  this.setState({
-		// 				generalError: `{${error.statusCode} error ${error.name}}`,
-		// 			  });
-		// 			  console.log(" error", error.name);
-		// 			}
-		// 		  }
-		// 		);
-		// 	})
-		// 	.catch((err) => {
-		// 	  this.setState({
-		// 		generalError: `{${err.statusCode} error ${err.name}}`,
-		// 	  });
-		// 	});
-	  }
+    handleSubmit(e) {
+      e.preventDefault();
+      fetch("/api/users", {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(this.state),
+      })
+        .then(() => {
+          this.oktaAuth
+            .signIn({
+              username: this.state.email,
+              password: this.state.password,
+            })
+            .then((res) =>
+              this.setState({
+                sessionToken: res.sessionToken,
+              }),
+              (error) => {
+                if (error) {
+                  this.setState({
+                    error: "Error, make sure u typed all data correctly. Password must be at least 7 characters, at least one big and one small character and one digit."
+                  });
+                  console.log(" error", error.name);
+                };
+              }
+            )
+            
+        })
+        .catch((err) => {
+          this.setState({
+            error: `{${err.statusCode} error ${err.name}}`
+          });
+        });
     }
 
     render() {
@@ -142,9 +94,9 @@ export default withAuth(
         this.props.auth.redirect({ sessionToken: this.state.sessionToken });
         return null;
       }
-      const errorMessage = this.state.generalError ? (
+      const errorMessage = this.state.error ? (
         <div className="error-message input-feedback text-danger mt-3 text-center">
-          {this.state.generalError}
+          {this.state.error}
         </div>
       ) : null;
 
@@ -162,7 +114,6 @@ export default withAuth(
             <form
               className="d-flex flex-column align-items-center"
               onSubmit={this.handleSubmit}
-              noValidate
             >
               <div className="form-group m-2 form-element">
                 <label htmlFor="email">Email</label>
@@ -175,11 +126,6 @@ export default withAuth(
                   placeholder="Enter your email"
                 />
               </div>
-              {this.state.emailError ? (
-                <div className="input-feedback text-danger">
-                  {this.state.emailError}
-                </div>
-              ) : null}
 
               <div className="form-group m-2 form-element">
                 <label htmlFor="firstName">First name</label>
@@ -192,11 +138,6 @@ export default withAuth(
                   placeholder="Enter your first name"
                 />
               </div>
-              {this.state.firstNameError ? (
-                <div className="input-feedback text-danger">
-                  {this.state.firstNameError}
-                </div>
-              ) : null}
 
               <div className="form-group m-2 form-element">
                 <label htmlFor="lastName">Last name</label>
@@ -209,11 +150,6 @@ export default withAuth(
                   placeholder="Enter your username"
                 />
               </div>
-              {this.state.lastNameError ? (
-                <div className="input-feedback text-danger">
-                  {this.state.lastNameError}
-                </div>
-              ) : null}
 
               <div className="form-group m-2 form-element">
                 <label htmlFor="password">Password</label>
@@ -226,22 +162,11 @@ export default withAuth(
                   placeholder="Enter your password"
                 />
               </div>
-              {this.state.passwordError ? (
-                <div className="input-feedback text-danger">
-                  {this.state.passwordError}
-                </div>
-              ) : null}
 
               <button type="submit" className="btn btn-primary m-3">
                 Submit
               </button>
-              <span className="mx-3 pb-3">
-                Already have an account?{" "}
-                <Link to="/login">
-                  <br className="d-xl-none" />
-                  Sign in!
-                </Link>
-              </span>
+              <span className="mx-3 pb-3">Already have an account? <Link to="/login"><br className="d-xl-none" />Sign in!</Link></span>
             </form>
           </div>
         </div>
