@@ -1,18 +1,27 @@
 import React from "react";
 import { EventEmitter } from "events";
-export default class Store extends React.Component {
-    constructor(props) {
-        super(props);
 
-        this.eventEmitter = new EventEmitter();
+/**
+ * Component tworzący EventEmitter
+ * @component
+ */
+class Store extends React.Component {
+  constructor(props) {
+    super(props);
 
-        this.state = {
-            appName: "Weather Finder"
-        }
-    }
-    render() {
-        return React.Children.map(this.props.children, (child) => {
-            return React.cloneElement(child, { ...this.state, eventEmitter: this.eventEmitter })
-        })
-    }
+    this.eventEmitter = new EventEmitter();
+    /** Utworzenie stanów początkowych */
+    this.state = {
+      appName: "Weather Finder",
+    };
+  }
+  render() {
+    return React.Children.map(this.props.children, (child) => {
+      return React.cloneElement(child, {
+        ...this.state,
+        eventEmitter: this.eventEmitter,
+      });
+    });
+  }
 }
+export default Store;

@@ -2,15 +2,20 @@ import React, { Component } from 'react';
 import { Redirect } from 'react-router-dom';
 import LoginForm from './LoginForm';
 import { withAuth } from '@okta/okta-react';
-
-export default withAuth(class Login extends Component {
+/**
+ * Nadrzędny komponent dla formularza logowania.
+ * @component
+ */
+class Login extends Component {
   constructor(props) {
     super(props);
     this.state = { authenticated: null };
     this.checkAuthentication = this.checkAuthentication.bind(this);
     this.checkAuthentication();
   }
-
+/**
+ * Metoda sprawdzająca autoryzacje użytkownika
+ */
   async checkAuthentication() {
     const authenticated = await this.props.auth.isAuthenticated();
     if (authenticated !== this.state.authenticated) {
@@ -28,4 +33,5 @@ export default withAuth(class Login extends Component {
       <Redirect to={{ pathname: '/' }} /> :
       <LoginForm baseUrl={this.props.baseUrl} />;
   }
-});
+}
+export default withAuth(Login);
